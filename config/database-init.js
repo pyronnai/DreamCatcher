@@ -15,6 +15,7 @@ export async function initDatabase() {
     console.log('Database initialized');
   } catch (error) {
     console.error('Database initialization error:', error);
+    throw error;
   } finally {
     client.release();
   } 
