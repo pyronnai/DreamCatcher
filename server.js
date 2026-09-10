@@ -5,6 +5,7 @@ import helmet from 'helmet'
 import { initDatabase } from './config/database-init.js';
 import pool from './config/database.js';
 import dreamsRouter from './routes/dreams.js';
+import rateLimit from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,6 +28,17 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 app.use(express.static(join(__dirname, 'public')));
+
+
+// Limit each IP to 100 requests per 15 minutes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter);
 
 // health endpoint
 
